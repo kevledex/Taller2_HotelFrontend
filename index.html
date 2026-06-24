@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Gestión de Hotel</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        iron: {
+                            50: '#f6f7f9',
+                            100: '#edf0f3',
+                            200: '#d8dee5',
+                            300: '#b8c5d3',
+                            400: '#93a6be',
+                            500: '#738aa8',
+                            600: '#5c718f',
+                            700: '#4b5c75',
+                            800: '#404e62',
+                            900: '#1e2530',
+                            950: '#0f131a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0f14;
+            background-image: radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.05) 0px, transparent 40%);
+        }
+        .bento-card {
+            background: #131922;
+            border: 1px solid #1f2937;
+            transition: all 0.3s ease;
+        }
+        .bento-card:hover {
+            border-color: #38bdf8;
+            box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.15);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f131a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #273549;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+    </style>
+</head>
+
+<body class="text-slate-300 min-h-screen font-sans">
+
+    <main class="max-w-7xl mx-auto px-6 py-10 space-y-8">
+        
+        <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-6 border-b border-iron-800">
+            <div>
+                <h1 class="text-3xl font-bold font-display text-white tracking-tight flex items-center gap-3">
+                    <svg class="w-8 h-8 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0V11m0 5h2m2 0h2m4 0h.01M5 7h.01M5 11h.01M12 7h.01M12 11h.01M19 7h.01M19 11h.01m-4 6h.01M15 7h.01M15 11h.01M11 17h.01M7 17h.01M7 13h.01M11 13h.01M15 13h.01M19 13h.01"></path></svg>
+                    Sistema de Control
+                </h1>
+                <p class="text-xs text-iron-400 mt-1 uppercase tracking-wider font-medium">Administración General de Habitaciones y Reservas</p>
+            </div>
+            <button onclick="sincronizarTodo()" class="px-5 py-2.5 bg-iron-800 hover:bg-iron-700 text-white font-semibold text-xs tracking-wider uppercase rounded-xl border border-iron-700 transition-all flex items-center gap-2">
+                <svg class="w-4 h-4 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18"></path></svg>
+                Actualizar Todo
+            </button>
+        </header>
+
+        <!-- Bento Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+            <section class="bento-card lg:col-span-8 rounded-2xl p-6 flex flex-col justify-between min-h-[460px]">
+                <div class="w-full">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-iron-800 pb-4 mb-6 gap-3">
+                        <div>
+                            <h2 class="text-base font-bold text-white tracking-wide flex items-center gap-2">
+                                <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                                Habitaciones registradas
+                            </h2>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="number" id="f-hab-piso" placeholder="Piso" class="px-3 py-1.5 text-xs bg-iron-950 border border-iron-800 rounded-lg focus:outline-none focus:border-sky-500 w-16 text-center font-semibold text-white">
+                            <button onclick="buscarHabPorPiso()" class="px-3 py-1.5 bg-iron-800 hover:bg-iron-700 text-slate-200 rounded-lg text-xs font-semibold transition-all">Piso</button>
+                            
+                            <input type="number" id="f-hab-num" placeholder="Num" class="px-3 py-1.5 text-xs bg-iron-950 border border-iron-800 rounded-lg focus:outline-none focus:border-sky-500 w-16 text-center font-semibold text-white">
+                            <button onclick="buscarHabPorNumero()" class="px-3 py-1.5 bg-sky-600/20 hover:bg-sky-600/30 border border-sky-500/40 text-sky-400 rounded-lg text-xs font-semibold transition-all">Número</button>
+                        </div>
+                    </div>
+                    
+                    <div id="grid-habitaciones" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[320px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Carga vía JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bloque 2: Formulario de Registro Dinámico (Pestañas integradas) -->
+            <section class="bento-card lg:col-span-4 rounded-2xl p-6 flex flex-col justify-between">
+                <div class="w-full space-y-6">
+                    <div class="bg-iron-950 p-1 rounded-xl border border-iron-800 flex">
+                        <button id="btn-mode-hab" onclick="setFormMode('hab')" class="w-full py-2 rounded-lg text-xs font-bold tracking-wider uppercase transition-all bg-sky-600 text-white shadow-md">
+                            Habitación
+                        </button>
+                        <button id="btn-mode-res" onclick="setFormMode('res')" class="w-full py-2 rounded-lg text-xs font-bold tracking-wider uppercase transition-all text-slate-400 hover:text-white">
+                            Reserva
+                        </button>
+                    </div>
+
+                    <!-- Campos Habitación -->
+                    <div id="form-hab-inputs" class="space-y-4 block">
+                        <div class="grid grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-iron-400 uppercase tracking-wide mb-1">ID (Editar)</label>
+                                <input type="number" id="form-hab-id" placeholder="Nuevo" class="w-full px-3 py-2 text-sm bg-iron-950 border border-iron-800 rounded-xl text-sky-400 focus:outline-none focus:border-sky-500 font-bold">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-[10px] font-bold text-iron-400 uppercase tracking-wide mb-1">Número de Habitación</label>
+                                <input type="number" id="form-hab-numero" class="w-full px-3 py-2 text-sm bg-iron-950 border border-iron-800 rounded-xl text-white focus:outline-none focus:border-sky-500">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-iron-400 uppercase tracking-wide mb-1">Piso</label>
+                                <input type="number" id="form-hab-piso" class="w-full px-3 py-2 text-sm bg-iron-950 border border-iron-800 rounded-xl text-white focus:outline-none focus:border-sky-500">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-[10px] font-bold text-iron-400 uppercase tracking-wide mb-1">Tipo de Habitación</label>
+                                <input type="text" id="form-hab-tipo" placeholder="Ej. Doble Ejecutiva" class="w-full px-3 py-2 text-sm bg-iron-950 border border-iron-800 rounded-xl text-white focus:outline-none focus:border-sky-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Campos Reserva -->
+                    <div id="form-res-inputs" class="space-y-4 hidden">
+                        <div class="grid grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-iron-400 uppercase tracking-wide mb-1">ID (Editar)</label>
+                                <input type="number" id="form-res-id" placeholder="Nuevo" class="w-full px-3 py-2 text-sm bg-iron-950 border border-iron-800 rounded-xl text-sky-400 focus:outline-none focus:border-sky-500 font-bold">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-[10px] font-bold text-iron-400 uppercase tracking-wide mb-1">Estado actual</label>
+                                <input type="text" id="form-res-estado" placeholder="Ej. Confirmada, Activa" class="w-full px-3 py-2 text-sm bg-iron-950 border border-iron-800 rounded-xl text-white focus:outline-none focus:border-sky-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-iron-400 uppercase tracking-wide mb-1">ID del Huésped Asignado</label>
+                            <input type="number" id="form-res-huesped" class="w-full px-3 py-2 text-sm bg-iron-950 border border-iron-800 rounded-xl text-white focus:outline-none focus:border-sky-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-iron-800 mt-6 space-y-3">
+                    <div class="flex gap-3">
+                        <button onclick="ejecutarAccion(false)" class="w-full py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs tracking-wider uppercase rounded-xl transition-all">Crear</button>
+                        <button onclick="ejecutarAccion(true)" class="w-full py-2.5 bg-iron-800 hover:bg-iron-700 text-slate-200 font-bold text-xs tracking-wider uppercase rounded-xl transition-all border border-iron-700">Modificar</button>
+                    </div>
+                    <div id="form-feedback" class="text-[11px] text-center font-medium h-4"></div>
+                </div>
+            </section>
+
+            <section class="bento-card lg:col-span-8 rounded-2xl p-6 min-h-[320px] flex flex-col justify-between">
+                <div class="w-full">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-iron-800 pb-4 mb-6 gap-3">
+                        <div>
+                            <h2 class="text-base font-bold text-white tracking-wide flex items-center gap-2">
+                                <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                Historial de reservas
+                            </h2>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" id="f-res-estado" placeholder="Estado" class="px-3 py-1.5 text-xs bg-iron-950 border border-iron-800 rounded-lg focus:outline-none focus:border-sky-500 text-white">
+                            <button onclick="buscarResPorEstado()" class="px-3 py-1.5 bg-iron-800 hover:bg-iron-700 text-slate-200 rounded-lg text-xs font-semibold">Estado</button>
+
+                            <input type="number" id="f-res-huesped" placeholder="ID Cliente" class="px-3 py-1.5 text-xs bg-iron-950 border border-iron-800 rounded-lg focus:outline-none focus:border-sky-500 text-white w-24">
+                            <button onclick="buscarResPorHuesped()" class="px-3 py-1.5 bg-iron-800 hover:bg-iron-700 text-slate-200 rounded-lg text-xs font-semibold">ID</button>
+                        </div>
+                    </div>
+
+                    <div id="grid-reservas" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Carga vía JS -->
+                    </div>
+                </div>
+            </section>
+
+            <section class="bento-card lg:col-span-4 rounded-2xl p-6 flex flex-col justify-between border-red-950/40 bg-gradient-to-b from-red-950/5 to-transparent">
+                <div>
+                    <h3 class="text-xs font-bold text-red-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Eliminar Registro
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-iron-400 uppercase mb-1">Eliminar Habitación (Por ID)</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="del-hab-id" placeholder="ID interno" class="w-full px-3 py-1.5 text-xs bg-iron-950 border border-iron-800 rounded-lg text-white focus:outline-none focus:border-red-500">
+                                <button onclick="eliminarEntidad('habitaciones', 'del-hab-id')" class="px-4 py-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-500/30 text-xs font-semibold rounded-lg transition-colors">Eliminar</button>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-iron-400 uppercase mb-1">Eliminar Reserva (Por ID)</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="del-res-id" placeholder="ID interno" class="w-full px-3 py-1.5 text-xs bg-iron-950 border border-iron-800 rounded-lg text-white focus:outline-none focus:border-red-500">
+                                <button onclick="eliminarEntidad('reservas', 'del-res-id')" class="px-4 py-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-500/30 text-xs font-semibold rounded-lg transition-colors">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="purge-feedback" class="text-[11px] text-red-400 text-center mt-4 h-4"></div>
+            </section>
+
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
